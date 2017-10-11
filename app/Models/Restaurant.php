@@ -22,7 +22,7 @@ class Restaurant extends Model
 
     public function getCityAttribute($value)
     {
-        return City::findOrFail($value)->name;
+        return City::findOrFail($value);
     }
 
     public function owner()

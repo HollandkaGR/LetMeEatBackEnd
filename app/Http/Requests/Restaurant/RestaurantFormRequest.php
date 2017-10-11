@@ -25,7 +25,7 @@ class RestaurantFormRequest extends FormRequest
     {
         return [
             'name'          => 'required|min:2|max:255',
-            'city'          => 'required|exists:cities,id',
+            'city.id'          => 'required|exists:cities,id',
         ];
     }
 
@@ -35,7 +35,6 @@ class RestaurantFormRequest extends FormRequest
             'name.required' => 'A név megadása kötelező!',
             'name.min' => 'A névnek minimum 2 karakter hosszúnak kell lennie!',
             'city.required' => 'Az étterem helyének megadása kötelező',
-            'city.min' => 'A városnak minimum 2 karakter hosszúnak kell lennie!'
         ];
     }
 }

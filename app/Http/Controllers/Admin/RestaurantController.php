@@ -22,8 +22,8 @@ class RestaurantController extends Controller
 		$restaurant = new Restaurant;
 		
 		$restaurant->owner_id 		= $request->user()->id;
-		$restaurant->name 				= $request->name;
-		$restaurant->city					= $request->city;
+		$restaurant->name 			= $request->name;
+		$restaurant->city			= $request->city;
 		$restaurant->open_hours		= $request->open_hours;
 
 		if ($restaurant->save()) {
@@ -31,6 +31,26 @@ class RestaurantController extends Controller
 				[
 				'data' => $restaurant
 				], 200);
+		}
+		else {
+			return response()->json(
+				[
+				'error' => 'Hiba a mentés során'
+				], 500);	
+		}
+	}
+
+	public function update(RestaurantFormRequest $request)
+	{
+		$restaurant = Restaurant::findOrFail($request->id);
+		
+		$restaurant->owner_id 		= $request->user()->id;
+		$restaurant->name 			= $request->name;
+		$restaurant->city				= $request->city['id'];
+		$restaurant->open_hours		= $request->open_hours;
+
+		if ($restaurant->save()) {
+			return response(200);
 		}
 		else {
 			return response()->json(

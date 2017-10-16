@@ -23,7 +23,7 @@ class RestaurantController extends Controller
 		
 		$restaurant->owner_id 		= $request->user()->id;
 		$restaurant->name 			= $request->name;
-		$restaurant->city			= $request->city;
+		$restaurant->city			= $request->city['id'];
 		$restaurant->open_hours		= $request->open_hours;
 
 		if ($restaurant->save()) {
@@ -46,8 +46,11 @@ class RestaurantController extends Controller
 		
 		$restaurant->owner_id 		= $request->user()->id;
 		$restaurant->name 			= $request->name;
-		$restaurant->city				= $request->city['id'];
+		$restaurant->city			= $request->city['id'];
 		$restaurant->open_hours		= $request->open_hours;
+		$restaurant->isActive			= $request->isActive;
+		$restaurant->showMessage		= $request->showMessage;
+		$restaurant->description		= $request->description;
 
 		if ($restaurant->save()) {
 			return response(200);

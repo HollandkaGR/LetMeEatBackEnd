@@ -11,6 +11,10 @@ class Category extends Model
 		'name'
 	];
 
+	protected $hidden = [
+		'created_at', 'updated_at'
+	];
+
 	public function restaurants()
 	{
 		return $this->belongsToMany(Restaurant::class);

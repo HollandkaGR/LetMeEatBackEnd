@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Restaurant extends Model
 {
     protected $fillable = [
-        'name', 'city', 'open_hours'
+        'name', 'city', 'open_hours', 'isActive', 'description', 'showMessage'
     ];
 
     protected $hidden = [
@@ -18,6 +18,8 @@ class Restaurant extends Model
 
     protected $casts = [
         'open_hours' => 'array',
+        'isActive' => 'boolean',
+        'showMessage' => 'boolean'
     ];
 
     public function getCityAttribute($value)

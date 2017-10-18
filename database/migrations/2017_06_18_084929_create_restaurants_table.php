@@ -23,6 +23,7 @@ class CreateRestaurantsTable extends Migration
             $table->text('description')->nullable();
             $table->boolean('showMessage')->default(false);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
         });

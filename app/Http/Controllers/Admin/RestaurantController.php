@@ -53,6 +53,24 @@ class RestaurantController extends Controller
 		$restaurant->description		= $request->description;
 
 		if ($restaurant->save()) {
+			return response()->json(
+				[
+				'data' => $restaurant
+				], 200);
+		}
+		else {
+			return response()->json(
+				[
+				'error' => 'Hiba a mentés során'
+				], 500);	
+		}
+	}
+
+	public function delete(Request $request)
+	{
+		$restaurant = Restaurant::findOrFail($request->id);
+
+		if ($restaurant->delete()) {
 			return response(200);
 		}
 		else {

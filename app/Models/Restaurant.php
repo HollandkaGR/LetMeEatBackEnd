@@ -5,9 +5,12 @@ namespace App\Models;
 use App\Models\Category;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Restaurant extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name', 'city', 'open_hours', 'isActive', 'description', 'showMessage'
     ];
@@ -21,6 +24,8 @@ class Restaurant extends Model
         'isActive' => 'boolean',
         'showMessage' => 'boolean'
     ];
+
+    protected $dates = ['deleted_at'];
 
     public function getCityAttribute($value)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Product;
 use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,8 +16,13 @@ class Category extends Model
 		'created_at', 'updated_at'
 	];
 
-	public function restaurants()
+	public function restaurant()
 	{
-		return $this->belongsToMany(Restaurant::class);
+		return $this->belongsTo(Restaurant::class);
+	}
+
+	public function products()
+	{
+		return $this->hasMany(Product::class);
 	}
 }

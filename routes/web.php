@@ -25,6 +25,9 @@ Route::group(['middleware' => ['isAdmin']], function () {
 	Route::post('/restaurant/update', 'Admin\RestaurantController@update')->name('admin.restaurant.update');
 	Route::post('/restaurant/delete', 'Admin\RestaurantController@delete')->name('admin.restaurant.delete');
 	Route::get('/restaurant/cities', 'Admin\RestaurantController@possibleCities')->name('admin.restaurant.cities');
+
+	Route::get('/restaurant/categories/{restId}', 'Admin\CategoryController@index')->name('admin.restaurant.categories.index');
+	
 	Route::post('/restaurant/test', 'RestaurantController@test')->name('restaurant.test');
 });
 

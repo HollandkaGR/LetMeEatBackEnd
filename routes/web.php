@@ -27,6 +27,7 @@ Route::group(['middleware' => ['isAdmin']], function () {
 	Route::get('/restaurant/cities', 'Admin\RestaurantController@possibleCities')->name('admin.restaurant.cities');
 
 	Route::get('/restaurant/categories/{restId}', 'Admin\CategoryController@index')->name('admin.restaurant.categories.index');
+	Route::post('/restaurant/categories/new', 'Admin\CategoryController@create')->name('admin.restaurant.categories.create');
 	
 	Route::post('/restaurant/test', 'RestaurantController@test')->name('restaurant.test');
 });

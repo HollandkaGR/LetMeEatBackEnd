@@ -22,7 +22,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 Route::group(['middleware' => ['isAdmin']], function () {
 	Route::get('/restaurant/owned', 'Admin\RestaurantController@index')->name('admin.restaurant.index');
 	Route::post('/restaurant/new', 'Admin\RestaurantController@create')->name('admin.restaurant.new');
-	Route::post('/restaurant/update', 'Admin\RestaurantController@update')->name('admin.restaurant.update');
+	Route::patch('/restaurant/update', 'Admin\RestaurantController@update')->name('admin.restaurant.update');
 	Route::post('/restaurant/delete', 'Admin\RestaurantController@delete')->name('admin.restaurant.delete');
 	Route::get('/restaurant/cities', 'Admin\RestaurantController@possibleCities')->name('admin.restaurant.cities');
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Restaurant\CategoryFormRequest;
 use App\Models\Category;
 use App\Models\Restaurant;
 use Illuminate\Database\QueryException;
@@ -14,10 +15,10 @@ class CategoryController extends Controller
 
 	public function index($restId)
 	{
-		return Category::where('restaurant_id', $restId)->get();
+		return Category::where('restaurant_id', $restId)->with('products')->get();
 	}
 
-	public function create(Request $request)
+	public function create(CategoryFormRequest $request)
 	{
 		$restId = $request->restId;
 		// dd(Restaurant::findOrFail($restId)->owner->id);
@@ -43,8 +44,8 @@ class CategoryController extends Controller
 						], 500);
 				}
 			} catch(QueryException $e){
-				dd('hiba: ' . $e->getMessage());
-		       	echo $e->getMessage();   // insert query
+					dd('hiba: ' . $e->getMessage());
+	       	echo $e->getMessage();   // insert query
 		    }
 		}
 		else 

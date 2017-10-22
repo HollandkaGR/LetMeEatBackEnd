@@ -24,8 +24,18 @@ class LoginFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email',
+            'email' => 'required|email|exists:users,email',
             'password' => 'required'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'email.required' => 'Az email cím megadása kötelező!',
+            'email.email' => 'Az email cím nem érvényes!',
+            'email.exists' => 'Nincs ilyen felhasználó regisztrálva!',
+            'password.required' => 'A jelszó megadása kötelező!'
         ];
     }
 }

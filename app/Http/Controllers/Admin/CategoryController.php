@@ -21,8 +21,7 @@ class CategoryController extends Controller
 	public function create(CategoryFormRequest $request)
 	{
 		$restId = $request->restId;
-		// dd(Restaurant::findOrFail($restId)->owner->id);
-		// dd($this->userOwnRest($request->user()->id, $restId));
+
 		if ($this->userOwnRest($request->user()->id, $restId)) {
 			try{
 				$category = new Category();
@@ -33,35 +32,34 @@ class CategoryController extends Controller
 				{
 					return response()->json(
 						[
-							'data' => $category
+									'data' => $category
 						], 200);
 				}
 				else 
 				{
 					return response()->json(
 						[
-							'error' => 'Hiba a mentés során'
+						 'error' => 'Hiba a mentés során'
 						], 500);
 				}
 			} catch(QueryException $e){
-					dd('hiba: ' . $e->getMessage());
-	       	echo $e->getMessage();   // insert query
-		    }
-		}
-		else 
-		{
+				dd('hiba: ' . $e->getMessage());
+				echo $e->getMessage();   // insert query
+			}
+		 }
+		 else 
+		 {
 			return response()->json(
 				[
-					'error' => 'Nincs joga!'
+				'error' => 'Nincs joga!'
 				], 423);
-		}
+		 }
 	}
 
 	public function update(CategoryFormRequest $request)
 	{
 		$category = Category::find($request->catId);
-		// dd(Restaurant::findOrFail($restId)->owner->id);
-		// dd($this->userOwnRest($request->user()->id, $restId));
+
 		if ($this->userOwnRest($request->user()->id, $category->restaurant_id)) {
 			try{
 				$category->name = $request->name;
@@ -80,19 +78,19 @@ class CategoryController extends Controller
 							'error' => 'Hiba a mentés során'
 						], 500);
 				}
-			} catch(QueryException $e){
-					dd('hiba: ' . $e->getMessage());
-	       	echo $e->getMessage();   // insert query
-		    }
+			} catch(QueryException $e) {
+				dd('hiba: ' . $e->getMessage());
+				echo $e->getMessage();   // insert query
+			}
 		}
 		else 
 		{
 			return response()->json(
 				[
-					'error' => 'Nincs joga!'
+				'error' => 'Nincs joga!'
 				], 423);
 		}
-	}
+	 }
 
 	public function delete(Request $request)
 	{
@@ -107,19 +105,19 @@ class CategoryController extends Controller
 				{
 					return response()->json(
 						[
-							'error' => 'Hiba a szerveren, a törlés során'
+						'error' => 'Hiba a szerveren, a törlés során'
 						], 500);
 				}
 			} catch(QueryException $e){
-					dd('hiba: ' . $e->getMessage());
-	       	echo $e->getMessage();   // insert query
-		    }
+				dd('hiba: ' . $e->getMessage());
+				echo $e->getMessage();   // insert query
+			}
 		}
 		else 
 		{
 			return response()->json(
 				[
-					'error' => 'Nincs joga!'
+				'error' => 'Nincs joga!'
 				], 423);
 		}
 	}

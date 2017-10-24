@@ -34,6 +34,7 @@ Route::group(['middleware' => ['isAdmin']], function () {
 	Route::post('/restaurant/categories/delete', 'Admin\CategoryController@delete')->name('admin.restaurant.categories.delete');
 	
 	Route::post('/restaurant/product/new', 'Admin\ProductController@create')->name('admin.restaurant.categories.create');
+	Route::post('/restaurant/product/update', 'Admin\ProductController@update')->name('admin.restaurant.categories.update');
 	
 	Route::post('/restaurant/test', 'RestaurantController@test')->name('restaurant.test');
 });

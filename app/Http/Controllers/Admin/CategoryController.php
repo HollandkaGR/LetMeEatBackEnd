@@ -57,6 +57,73 @@ class CategoryController extends Controller
 		}
 	}
 
+	public function update(CategoryFormRequest $request)
+	{
+		$category = Category::find($request->catId);
+		// dd(Restaurant::findOrFail($restId)->owner->id);
+		// dd($this->userOwnRest($request->user()->id, $restId));
+		if ($this->userOwnRest($request->user()->id, $category->restaurant_id)) {
+			try{
+				$category->name = $request->name;
+
+				if ($category->save())
+				{
+					return response()->json(
+						[
+							'data' => $category
+						], 200);
+				}
+				else 
+				{
+					return response()->json(
+						[
+							'error' => 'Hiba a mentés során'
+						], 500);
+				}
+			} catch(QueryException $e){
+					dd('hiba: ' . $e->getMessage());
+	       	echo $e->getMessage();   // insert query
+		    }
+		}
+		else 
+		{
+			return response()->json(
+				[
+					'error' => 'Nincs joga!'
+				], 423);
+		}
+	}
+
+	public function delete(Request $request)
+	{
+		$category = Category::findOrFail($request->catId);
+		if ($this->userOwnRest($request->user()->id, $category->restaurant_id)) {
+			try{
+				if ($category->forceDelete())
+				{
+					return response()->json(null, 200);
+				}
+				else 
+				{
+					return response()->json(
+						[
+							'error' => 'Hiba a szerveren, a törlés során'
+						], 500);
+				}
+			} catch(QueryException $e){
+					dd('hiba: ' . $e->getMessage());
+	       	echo $e->getMessage();   // insert query
+		    }
+		}
+		else 
+		{
+			return response()->json(
+				[
+					'error' => 'Nincs joga!'
+				], 423);
+		}
+	}
+
 	private function userOwnRest($userId, $restId)
 	{
 		return $userId === Restaurant::findOrFail($restId)->owner->id;

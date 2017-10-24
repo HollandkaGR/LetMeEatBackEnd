@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
+use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-		use SoftDeletes;
+	use SoftDeletes;
 
-		protected $fillable= [
-			'name', 'description', 'price'
-		];
+	protected $fillable= [
+		'name', 'description', 'price'
+	];
 
-		protected $hidden = [
+	protected $hidden = [
         'created_at', 'updated_at', 'deleted_at'
     ];
 

@@ -70,7 +70,7 @@ class RestaurantController extends Controller
 	{
 		$restaurant = Restaurant::findOrFail($request->id);
 
-		if ($restaurant->delete()) {
+		if ($restaurant->forceDelete()) {
 			return response(200);
 		}
 		else {

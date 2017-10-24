@@ -18,6 +18,7 @@ class CreateCategoriesTable extends Migration
             $table->integer('restaurant_id')->unsigned();
             $table->string('name');
             $table->timestamps();
+            $table->softDeletes();
             
             $table->unique(array('restaurant_id', 'name'));
             

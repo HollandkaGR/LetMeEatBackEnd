@@ -4,12 +4,13 @@ namespace App\Models;
 
 use App\Models\Category;
 use App\User;
+use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Restaurant extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CascadeSoftDeletes;
 
     protected $fillable = [
         'name', 'city', 'open_hours', 'isActive', 'description', 'showMessage'
@@ -26,6 +27,7 @@ class Restaurant extends Model
     ];
 
     protected $dates = ['deleted_at'];
+    protected $cascadeDeletes = ['categories'];
 
     public function getCityAttribute($value)
     {

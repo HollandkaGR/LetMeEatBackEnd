@@ -92,9 +92,9 @@ class CategoryController extends Controller
 		}
 	 }
 
-	public function delete(Request $request)
+	public function delete(Request $request, $catId)
 	{
-		$category = Category::findOrFail($request->catId);
+		$category = Category::findOrFail($catId);
 		if ($this->userOwnRest($request->user()->id, $category->restaurant_id)) {
 			try{
 				if ($category->forceDelete())

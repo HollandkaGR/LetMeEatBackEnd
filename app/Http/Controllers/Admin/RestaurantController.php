@@ -42,9 +42,17 @@ class RestaurantController extends Controller
 
 	public function update(RestaurantFormRequest $request)
 	{
-		$restaurant = Restaurant::findOrFail($request->id);
+		$restId = $request->id;
+
+		if (!$this->userOwnRest($request->user()->id, $restId)) {
+			return response()->json(
+				[
+					'error' => 'Nincs joga!'
+				], 423);
+		}
+
+		$restaurant = Restaurant::findOrFail($restId);
 		
-		$restaurant->owner_id 		= $request->user()->id;
 		$restaurant->name 			= $request->name;
 		$restaurant->city			= $request->city['id'];
 		$restaurant->open_hours		= $request->open_hours;
@@ -66,9 +74,16 @@ class RestaurantController extends Controller
 		}
 	}
 
-	public function delete(Request $request)
+	public function delete(Request $request, $restId)
 	{
-		$restaurant = Restaurant::findOrFail($request->id);
+		if (!$this->userOwnRest($request->user()->id, $restId)) {
+			return response()->json(
+				[
+					'error' => 'Nincs joga!'
+				], 423);
+		}
+
+		$restaurant = Restaurant::findOrFail($restId);
 
 		if ($restaurant->forceDelete()) {
 			return response(200);
@@ -84,5 +99,16 @@ class RestaurantController extends Controller
 	public function possibleCities ()
 	{
 		return City::all();
+	}
+
+	private function userOwnRest($userId, $restId)
+	{
+		if ($owner = Restaurant::findOrFail($restId)->owner) {
+			return $userId === $owner->id;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

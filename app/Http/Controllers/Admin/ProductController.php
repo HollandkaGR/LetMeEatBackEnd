@@ -83,6 +83,36 @@ class ProductController extends Controller
 		}
 	}
 
+	public function delete(Request $request, $prodId)
+	{
+		$product = Product::findOrFail($prodId);
+		if ($this->userOwnRest($request->user()->id, $product->category->restaurant_id)) {
+			try{
+				if ($product->forceDelete())
+				{
+					return response()->json(null, 200);
+				}
+				else 
+				{
+					return response()->json(
+						[
+						'error' => 'Hiba a szerveren, a törlés során'
+						], 500);
+				}
+			} catch(QueryException $e){
+				dd('hiba: ' . $e->getMessage());
+				echo $e->getMessage();   // insert query
+			}
+		}
+		else 
+		{
+			return response()->json(
+				[
+				'error' => 'Nincs joga!'
+				], 423);
+		}
+	}
+
 	private function userOwnRest($userId, $restId)
 	{
 		if ($owner = Restaurant::findOrFail($restId)->owner) {

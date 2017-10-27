@@ -98,10 +98,9 @@ class RestaurantController extends Controller
 
 	public function image(Request $request)
 	{
-		print_r($request->all());
-		die();
-		$path = \Illuminate\Support\Facades\Storage::putFile('restaurant', $request->file('restIndex'));
-		dd($path);
+		$path = \Illuminate\Support\Facades\Storage::putFile('restaurant', $request->file('restIndexImage'));
+		return response(200);
+		// dd($path);
 	}
 
 	public function possibleCities ()

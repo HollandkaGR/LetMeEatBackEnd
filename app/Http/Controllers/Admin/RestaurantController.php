@@ -98,8 +98,16 @@ class RestaurantController extends Controller
 
 	public function image(Request $request)
 	{
-		$path = \Illuminate\Support\Facades\Storage::putFile('restaurant', $request->file('restIndexImage'));
-		return response(200);
+		$this->validate($request, [
+			'restIndexImage' => 'image',
+		]);
+
+		$path = $request->file('restIndexImage')->store('restaurants', 'public');
+		return response(
+			[
+			'simplePath' => $path,
+			'data' => \Illuminate\Support\Facades\Storage::url($path)
+			], 200);
 		// dd($path);
 	}
 

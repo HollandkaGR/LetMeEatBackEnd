@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('404');
 });
 
 Route::group(['middleware' => ['jwt.auth']], function () {

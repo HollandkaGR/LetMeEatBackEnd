@@ -20,81 +20,86 @@ class CategoryController extends Controller
 
 	public function create(CategoryFormRequest $request)
 	{
-		$restId = $request->restId;
+		$restaurant = Restaurant::findOrFail($request->restId);
 
-		if ($this->userOwnRest($request->user()->id, $restId)) {
-			try{
-				$category = new Category();
-				$category->restaurant_id = $restId;
-				$category->name = $request->name;
-
-				if ($category->save())
-				{
-					return response()->json(
-						[
-									'data' => $category
-						], 200);
-				}
-				else 
-				{
-					return response()->json(
-						[
-						 'error' => 'Hiba a mentés során'
-						], 500);
-				}
-			} catch(QueryException $e){
-				dd('hiba: ' . $e->getMessage());
-				echo $e->getMessage();   // insert query
-			}
-		 }
-		 else 
-		 {
+		if (!$restaurant->hasRight($request->user())) {
 			return response()->json(
 				[
-				'error' => 'Nincs joga!'
+					'error' => 'Nincs joga!'
 				], 423);
-		 }
+		}
+
+		try{
+			$category = new Category();
+			$category->restaurant_id = $restaurant->id;
+			$category->name = $request->name;
+
+			if ($category->save())
+			{
+				return response()->json(
+					[
+						'data' => $category
+					], 200);
+			}
+			else 
+			{
+				return response()->json(
+					[
+						'error' => 'Hiba a mentés során'
+					], 500);
+			}
+		} catch(QueryException $e){
+			dd('hiba: ' . $e->getMessage());
+			echo $e->getMessage();   // insert query
+		}
 	}
 
 	public function update(CategoryFormRequest $request)
 	{
 		$category = Category::find($request->catId);
 
-		if ($this->userOwnRest($request->user()->id, $category->restaurant_id)) {
-			try{
-				$category->name = $request->name;
-
-				if ($category->save())
-				{
-					return response()->json(
-						[
-							'data' => $category
-						], 200);
-				}
-				else 
-				{
-					return response()->json(
-						[
-							'error' => 'Hiba a mentés során'
-						], 500);
-				}
-			} catch(QueryException $e) {
-				dd('hiba: ' . $e->getMessage());
-				echo $e->getMessage();   // insert query
-			}
-		}
-		else 
-		{
+		if (!$category->restaurant->hasRight($request->user())) {
 			return response()->json(
 				[
-				'error' => 'Nincs joga!'
+					'error' => 'Nincs joga!'
 				], 423);
 		}
-	 }
+
+		try{
+			$category->name = $request->name;
+
+			if ($category->save())
+			{
+				return response()->json(
+					[
+						'data' => $category
+					], 200);
+			}
+			else 
+			{
+				return response()->json(
+					[
+						'error' => 'Hiba a mentés során'
+					], 500);
+			}
+		} catch(QueryException $e) {
+			dd('hiba: ' . $e->getMessage());
+			echo $e->getMessage();   // insert query
+		}
+
+	}
 
 	public function delete(Request $request, $catId)
 	{
 		$category = Category::findOrFail($catId);
+
+		if (!$category->restaurant->hasRight($request->user())) {
+			return response()->json(
+				[
+					'error' => 'Nincs joga!'
+				], 423);
+		}
+		
 		if ($this->userOwnRest($request->user()->id, $category->restaurant_id)) {
 			try{
 				if ($category->forceDelete())

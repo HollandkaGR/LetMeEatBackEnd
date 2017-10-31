@@ -13,7 +13,7 @@ class Restaurant extends Model
     use SoftDeletes, CascadeSoftDeletes;
 
     protected $fillable = [
-        'name', 'city', 'open_hours', 'isActive', 'description', 'showMessage'
+        'name', 'city', 'open_hours', 'isActive', 'description', 'showMessage', 'indexImage', 'deliveryTime', 'minimumOrder'
     ];
 
     protected $hidden = [
@@ -32,6 +32,11 @@ class Restaurant extends Model
     public function getCityAttribute($value)
     {
         return City::findOrFail($value);
+    }
+
+    public function hasRight($user)
+    {
+        return $this->owner_id === $user->id;
     }
 
     public function owner()

@@ -14,13 +14,12 @@ class ProductController extends Controller
 	
 	public function create(ProductFormRequest $request)
 	{
-		// dd(Category::findOrFail($request->catId)->restaurant->id);
-		$restId = Category::findOrFail($request->catId)->restaurant->id;
-		if (!$this->userOwnRest($request->user()->id, $restId)) {
+		$restaurant = Category::findOrFail($request->catId)->restaurant;
+		if (!$restaurant->hasRight($request->user())) {
 			return response()->json(
 				[
-					'error' => 'Nincs jogod ehhez!'
-				], 422);
+					'error' => 'Nincs joga!'
+				], 423);
 		}
 
 		$product = new Product;
@@ -46,81 +45,70 @@ class ProductController extends Controller
 
 	public function update(ProductFormRequest $request)
 	{
-		$product = Product::findOrFail($request->prodId);
-		$restId = Category::findOrFail($request->catId)->restaurant->id;
-
-		if ($this->userOwnRest($request->user()->id, $restId)) {
-			try{
-				$product->name = $request->name;
-				$product->description = $request->description;
-				$product->price = $request->price;
-
-				if ($product->save())
-				{
-					return response()->json(
-						[
-							'data' => $product
-						], 200);
-				}
-				else 
-				{
-					return response()->json(
-						[
-							'error' => 'Hiba a mentés során'
-						], 500);
-				}
-			} catch(QueryException $e) {
-				dd('hiba: ' . $e->getMessage());
-				echo $e->getMessage();   // insert query
-			}
-		}
-		else 
-		{
+		
+		$restaurant = Category::findOrFail($request->catId)->restaurant;
+		if (!$restaurant->hasRight($request->user())) {
 			return response()->json(
 				[
-				'error' => 'Nincs joga!'
+					'error' => 'Nincs joga!'
 				], 423);
 		}
+
+		$product = Product::findOrFail($request->prodId);
+		try{
+			$product->name = $request->name;
+			$product->description = $request->description;
+			$product->price = $request->price;
+
+			if ($product->save())
+			{
+				return response()->json(
+					[
+						'data' => $product
+					], 200);
+			}
+			else 
+			{
+				return response()->json(
+					[
+						'error' => 'Hiba a mentés során'
+					], 500);
+			}
+		} catch(QueryException $e) {
+			dd('hiba: ' . $e->getMessage());
+			echo $e->getMessage();   // insert query
+		}
+		
 	}
 
 	public function delete(Request $request, $prodId)
 	{
+
 		$product = Product::findOrFail($prodId);
-		if ($this->userOwnRest($request->user()->id, $product->category->restaurant_id)) {
-			try{
-				if ($product->forceDelete())
-				{
-					return response()->json(null, 200);
-				}
-				else 
-				{
-					return response()->json(
-						[
-						'error' => 'Hiba a szerveren, a törlés során'
-						], 500);
-				}
-			} catch(QueryException $e){
-				dd('hiba: ' . $e->getMessage());
-				echo $e->getMessage();   // insert query
-			}
-		}
-		else 
-		{
+
+		if (!$product->category->restaurant->hasRight($request->user())) {
 			return response()->json(
 				[
-				'error' => 'Nincs joga!'
+					'error' => 'Nincs joga!'
 				], 423);
 		}
-	}
 
-	private function userOwnRest($userId, $restId)
-	{
-		if ($owner = Restaurant::findOrFail($restId)->owner) {
-			return $userId === $owner->id;
+		try{
+			if ($product->forceDelete())
+			{
+				return response()->json(null, 200);
+			}
+			else 
+			{
+				return response()->json(
+					[
+					'error' => 'Hiba a szerveren, a törlés során'
+					], 500);
+			}
+		} catch(QueryException $e){
+			dd('hiba: ' . $e->getMessage());
+			echo $e->getMessage();   // insert query
 		}
-		else
-		{
-			return false;
-		}
+		
 	}
 }

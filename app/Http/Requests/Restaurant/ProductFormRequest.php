@@ -16,10 +16,10 @@ class ProductFormRequest extends FormRequest
   public function rules(Request $request)
   {
     return [
-      'name'          => 'required|min:2|max:255|unique:products,name,'. $request->prodId . ',id,category_id,' . $request->catId,
-      'description'   => 'nullable',
-      'price'         => 'required|numeric',
-      'catId'         => 'required|exists:categories,id',
+      'name'            => 'required|min:2|max:255|unique:products,name,'. $request->prodId . ',id,category_id,' . $request->catId,
+      'description'    => 'nullable',
+      'price'             => 'required|numeric',
+      'catId'             => 'required|exists:categories,id',
     ];
   }
 

@@ -18,10 +18,13 @@ class CreateRestaurantsTable extends Migration
             $table->integer('owner_id')->unsigned();
             $table->boolean('isActive')->default(false);
             $table->string('name');
+            $table->string('indexImage')->nullable();
             $table->integer('city')->unsigned();
             $table->json('open_hours')->nullable();
             $table->text('description')->nullable();
             $table->boolean('showMessage')->default(false);
+            $table->integer('deliveryTime')->unsigned()->default(60);
+            $table->integer('minimumOrder')->unsigned()->default(0);
             $table->timestamps();
             $table->softDeletes();
 

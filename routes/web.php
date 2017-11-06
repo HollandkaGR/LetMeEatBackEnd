@@ -37,7 +37,8 @@ Route::group(['middleware' => ['isAdmin']], function () {
 	Route::patch('/restaurant/product/update', 'Admin\ProductController@update')->name('admin.restaurant.categories.update');
 	Route::delete('/restaurant/product/delete/{prodId}', 'Admin\ProductController@delete')->name('admin.restaurant.categories.delete');
 
-	Route::post('/restaurant/image/upload', 'Admin\RestaurantController@image')->name('admin.restaurant.image');
+	Route::post('/restaurant/image/upload', 'Admin\RestaurantController@imageUpload')->name('admin.restaurant.imageUpload');
+	Route::post('/restaurant/image/delete', 'Admin\RestaurantController@imageDelete')->name('admin.restaurant.imageDelete');
 	
 	Route::post('/restaurant/test', 'RestaurantController@test')->name('restaurant.test');
 });

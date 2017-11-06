@@ -19,6 +19,8 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->integer('price')->unsigned();
+            $table->boolean('inAction')->default(false);
+            $table->integer('salePercent')->unsigned()->default(0);
             $table->timestamps();
             $table->softDeletes();
             

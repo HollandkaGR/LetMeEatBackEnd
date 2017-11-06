@@ -7,6 +7,7 @@ use App\Http\Requests\Restaurant\RestaurantFormRequest;
 use App\Models\City;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class RestaurantController extends Controller
 {
@@ -54,6 +55,7 @@ class RestaurantController extends Controller
 		$restaurant->name 			= $request->name;
 		$restaurant->city			= $request->city['id'];
 		$restaurant->deliveryTime		= $request->deliveryTime;
+		$restaurant->minimumOrder		= $request->minimumOrder;
 		$restaurant->open_hours		= $request->open_hours;
 		$restaurant->isActive			= $request->isActive;
 		$restaurant->showMessage		= $request->showMessage;
@@ -85,6 +87,9 @@ class RestaurantController extends Controller
 		}
 
 		if ($restaurant->forceDelete()) {
+			if ($restaurant->indexImage !== null) {
+				Storage::disk('public')->delete(str_replace('/storage/', '', $restaurant->indexImage));
+			}
 			return response(200);
 		}
 		else {
@@ -95,19 +100,74 @@ class RestaurantController extends Controller
 		}
 	}
 
-	public function image(Request $request)
+	public function imageUpload(Request $request)
 	{
 		$this->validate($request, [
-			'restIndexImage' => 'image',
+			'restIndexImage' 	=> 'image',
+			'restId' 					=> 'required|exists:restaurants,id'
 		]);
 
+		$restaurant = Restaurant::findOrFail($request->restId);
+
+		if (!$restaurant->hasRight($request->user())) {
+			return response()->json(
+				[
+					'error' => 'Nincs joga!'
+				], 423);
+		}
+
 		$path = $request->file('restIndexImage')->store('restaurants', 'public');
-		return response(
+		$url = Storage::url($path);
+
+		if ($restaurant->indexImage !== null) {
+			Storage::disk('public')->delete(str_replace('/storage/', '', $restaurant->indexImage));
+		}
+
+		$restaurant->indexImage = $url;
+
+		if ($restaurant->save()) {
+			return response(
 			[
-			'simplePath' => $path,
-			'data' => \Illuminate\Support\Facades\Storage::url($path)
+				'data' => $restaurant
 			], 200);
-		// dd($path);
+		}
+		else {
+			return response(
+			[
+				'error' => 'Hiba a mentés során'
+			], 200);
+		}
+	}
+
+	public function imageDelete(Request $request)
+	{
+		$restaurant = Restaurant::findOrFail($request->restId);
+
+		if (!$restaurant->hasRight($request->user())) {
+			return response()->json(
+				[
+					'error' => 'Nincs joga!'
+				], 423);
+		}
+
+		if ($restaurant->indexImage !== null) {
+			Storage::disk('public')->delete(str_replace('/storage/', '', $restaurant->indexImage));
+		}
+
+		$restaurant->indexImage = null;
+
+		if ($restaurant->save()) {
+			return response(
+			[
+				'data' => $restaurant
+			], 200);
+		}
+		else {
+			return response(
+			[
+				'error' => 'Hiba a mentés során'
+			], 200);
+		}
 	}
 
 	public function possibleCities ()

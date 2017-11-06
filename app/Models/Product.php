@@ -11,11 +11,15 @@ class Product extends Model
 	use SoftDeletes;
 
 	protected $fillable= [
-		'name', 'description', 'price'
+		'name', 'description', 'price', 'inAction', 'salePercent'
 	];
 
 	protected $hidden = [
         'created_at', 'updated_at', 'deleted_at'
+    ];
+
+    protected $casts = [
+        'inAction' => 'boolean'
     ];
 
     public function category()

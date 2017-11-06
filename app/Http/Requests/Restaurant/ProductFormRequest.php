@@ -16,10 +16,12 @@ class ProductFormRequest extends FormRequest
   public function rules(Request $request)
   {
     return [
-      'name'            => 'required|min:2|max:255|unique:products,name,'. $request->prodId . ',id,category_id,' . $request->catId,
-      'description'    => 'nullable',
+      'name'              => 'required|min:2|max:255|unique:products,name,'. $request->prodId . ',id,category_id,' . $request->catId,
+      'description'       => 'nullable',
       'price'             => 'required|numeric',
       'catId'             => 'required|exists:categories,id',
+      'inAction'          => 'required',
+      'salePercent'       => 'required_if:inAction,true|numeric|min:0|max:99'
     ];
   }
 
@@ -33,6 +35,8 @@ class ProductFormRequest extends FormRequest
       'price.numeric'   => 'Az árnak számnak kell lennie!',
       'catId.required'  => 'A kategória azonosítója hiányzik!',
       'catId.exists'    => 'Hibás kategória!',
+      'salePercent.numeric' => 'Az akció mértéke csak százalékban megadható!',
+      'salePercent.max' => 'Maximum 99%-os kedvezmény adható!',
     ];
   }
 }

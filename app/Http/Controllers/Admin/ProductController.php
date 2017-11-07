@@ -28,6 +28,8 @@ class ProductController extends Controller
 		$product->description		= $request->description;
 		$product->price					= $request->price;
 		$product->category_id		= $request->catId;
+		$product->inAction			= $request->inAction;
+		$product->salePercent		= $request->salePercent;
 
 		if ($product->save()) {
 			return response()->json(
@@ -54,7 +56,7 @@ class ProductController extends Controller
 				], 423);
 		}
 
-		$product = Product::findOrFail($request->prodId);
+		$product = Product::findOrFail($request->id);
 		try{
 			$product->name = $request->name;
 			$product->description = $request->description;
@@ -83,10 +85,10 @@ class ProductController extends Controller
 		
 	}
 
-	public function delete(Request $request, $prodId)
+	public function delete(Request $request, $id)
 	{
 
-		$product = Product::findOrFail($prodId);
+		$product = Product::findOrFail($id);
 
 		if (!$product->category->restaurant->hasRight($request->user())) {
 			return response()->json(

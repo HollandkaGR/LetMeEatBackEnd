@@ -16,7 +16,7 @@ class ProductFormRequest extends FormRequest
   public function rules(Request $request)
   {
     return [
-      'name'              => 'required|min:2|max:255|unique:products,name,'. $request->prodId . ',id,category_id,' . $request->catId,
+      'name'              => 'required|min:2|max:255|unique:products,name,'. $request->id . ',id,category_id,' . $request->catId,
       'description'       => 'nullable',
       'price'             => 'required|numeric',
       'catId'             => 'required|exists:categories,id',
@@ -35,6 +35,7 @@ class ProductFormRequest extends FormRequest
       'price.numeric'   => 'Az árnak számnak kell lennie!',
       'catId.required'  => 'A kategória azonosítója hiányzik!',
       'catId.exists'    => 'Hibás kategória!',
+      'salePercent.required_if' => 'Ha akciós a termék, legyen mértéke is!',
       'salePercent.numeric' => 'Az akció mértéke csak százalékban megadható!',
       'salePercent.max' => 'Maximum 99%-os kedvezmény adható!',
     ];

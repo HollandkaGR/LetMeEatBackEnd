@@ -56,7 +56,7 @@ class CategoryController extends Controller
 
 	public function update(CategoryFormRequest $request)
 	{
-		$category = Category::find($request->catId);
+		$category = Category::find($request->id);
 
 		if (!$category->restaurant->hasRight($request->user())) {
 			return response()->json(

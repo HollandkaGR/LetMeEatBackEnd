@@ -26,7 +26,7 @@ class CategoryFormRequest extends FormRequest
   {
     return [
       'restId'            => 'required|exists:restaurants,id',
-      'name'              => 'required|min:2|max:255|unique:categories,name,'. $request->catId . ',id,restaurant_id,' . $request->restId
+      'name'              => 'required|min:2|max:255|unique:categories,name,'. $request->id . ',id,restaurant_id,' . $request->restId
     ];
   }
 

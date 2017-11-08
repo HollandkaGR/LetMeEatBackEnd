@@ -13,11 +13,12 @@ class RestaurantController extends Controller
 
 	public function index(Request $request)
 	{
-		$restaurants = Restaurant::get();
+		$restaurants = Restaurant::with('categories')->get();
 
 		return response()->json(
 			[
-				'data' => $restaurants
+				'data' => $restaurants,
+				'timestamp' => \Carbon\Carbon::now()->timestamp
 			], 200);
 	}
 

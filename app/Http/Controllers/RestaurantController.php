@@ -27,12 +27,12 @@ class RestaurantController extends Controller
 		
 	}
 
-	public function products(Request $request)
+	public function products($restId)
 	{
-		$categories = Restaurant::with('categories')->where('slug', $request->slug)->first();
+		$categories = Restaurant::findOrFail($restId)->with('categories.products')->first()->categories;
 		return response()->json(
 			[
-			'data' => $categories
+				'data' => $categories
 			], 200);
 	}
 
